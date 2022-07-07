@@ -43,18 +43,18 @@ def vowel_star(word)
   new_word
 end
 
+
 def power_of_two?(num)
   if num == 1
     return true
   end
-  result = num
-  new_num = result.even?
-  while new_num
-    result = result / 2
-    new_num = result.even?
-    if result == 2
-      return true
+  while num > 2
+    if num.even?()
+      num = num/2
+    else
+      return false
     end
   end
-  return false
+  true
 end
+
