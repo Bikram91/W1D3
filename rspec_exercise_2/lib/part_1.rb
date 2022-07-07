@@ -1,97 +1,60 @@
 def partition(arr, num)
-    new_arr = []
-    arr1 = []
-    arr2 = []
-    arr.each do |ele|
-        if ele >= num
-            arr2 << ele
-        else
-            arr1 << ele
-        end
+  new_arr1 = []
+  new_arr2 = []
+  arr.each do |ele|
+    if ele < num
+      new_arr1 << ele
+    else
+      new_arr2 << ele
     end
-    new_arr = arr1, arr2
+  end
+  [new_arr1, new_arr2]
 end
 
 def merge(hash1, hash2)
-   hash = {}
-    hash1.each do |k,v|
-        hash[k] = v
-    end
-    hash2.each do |k,v|
-        hash[k] = v
-    end
-    hash
+  new_hash = {}
+  hash1.each { |k, v| new_hash[k] = v }
+  hash2.each { |k, v| new_hash[k] = v }
+  new_hash
 end
 
 def censor(sent, arr)
-  new_arr = []
-  arr1 = sent.split(" ")
-  arr1.each_with_index do |ele, i|
-    if arr.include?(ele.downcase)
-      new_arr << replace1(ele) 
+  new_arr = sent.split(" ")
+  new_sent = new_arr.map do |word|
+    if arr.include?(word.downcase)
+      vowel_star(word)
     else
-      new_arr << ele
-    end
-    end
-    new_arr.join(" ")
-end
-      
-def replace1(word)
-  new_str = ""
-  vowels = "aeiou"
-  word.each_char do |char|
-    if vowels.include?(char.downcase)
-      new_str += "*"
-    else
-    new_str += char
+      word
     end
   end
-  new_str
+  new_sent.join(" ")
 end
 
+def vowel_star(word)
+  new_word = ""
+  vowels = "aeiouAEIOU"
+  word.each_char do |char|
+    if vowels.include?(char)
+      new_word += "*"
+    else
+      new_word += char
+    end
+  end
+  new_word
+end
 
 def power_of_two?(num)
   if num == 1
     return true
   end
-  even = true
-        
-  while even
-    new_num = num/2 
-    num = new_num
-    if num.odd?
-      return false
-    end
-    if num == 2
+  result = num
+  new_num = result.even?
+  while new_num
+    result = result / 2
+    new_num = result.even?
+    if result == 2
       return true
     end
   end
+  return false
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
