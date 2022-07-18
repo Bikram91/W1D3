@@ -314,13 +314,12 @@ end
 #     [5, 2, 9, 7],
 # ]) # false
 
-
 # Pascal's triangle is a 2-dimensional array with the shape of a pyramid. The top of the pyramid is the number 1. To generate further levels of the pyramid, every element is the sum of the element above and to the left with the element above and to the right. Nonexisting elements are treated as 0 when calculating the sum. For example, here are the first 5 levels of Pascal's triangle:
 #     1
 #    1 1
 #   1 2 1
 #  1 3 3 1
-# 1 4 6 4 1 
+# 1 4 6 4 1
 
 # Write a method pascals_triangle that accepts a positive number, n, as an argument and returns a 2-dimensional array representing the first n levels of pascal's triangle.
 
@@ -339,12 +338,11 @@ def sum(arr)
   add = []
   i = 0
   while i < arr.length - 1
-    add << arr[i] + arr[i+1]
-    i+=1
+    add << arr[i] + arr[i + 1]
+    i += 1
   end
   add
 end
-
 
 # p pascals_triangle(5)
 # # [
@@ -366,5 +364,126 @@ end
 # #     [1, 6, 15, 20, 15, 6, 1]
 # # ]
 
+# Write a method mersenne_prime that accepts a number, n, as an argument and returns the n-th Mersenne prime.
 
+def mersenne_prime(num)
+  arr = []
+  i = 0
+  while arr.length < num
+    i += 1
+    num1 = 2 ** i - 1
+    arr << num1 if prime?(num1)
+  end
+  arr[-1]
+end
 
+def prime?(num)
+  return false if num < 2
+  (2...num).none? { |factor| num % factor == 0 }
+end
+
+# p mersenne_prime(1) # 3
+# p mersenne_prime(2) # 7
+# p mersenne_prime(3) # 31
+# p mersenne_prime(4) # 127
+# p mersenne_prime(6) # 131071
+
+# Write a method triangular_word? that accepts a word as an argument and returns a boolean indicating whether or not that word's number encoding is a triangular number. You can assume that the argument contains lowercase letters.
+
+def triangular_word?(word)
+  arr = ("a".."z").to_a
+  sum = 0
+  word.each_char do |char|
+    sum += arr.index(char) + 1
+  end
+  triangular_num?(sum)
+end
+
+def triangular_num?(num)
+  i = 1
+  while i <= num
+    return true if (i * (i + 1)) / 2 == num
+    i += 1
+  end
+  false
+end
+
+# p triangular_word?('abc')       # true
+# p triangular_word?('ba')        # true
+# p triangular_word?('lovely')    # true
+# p triangular_word?('question')  # true
+# p triangular_word?('aa')        # false
+# p triangular_word?('cd')        # false
+# p triangular_word?('cat')       # false
+# p triangular_word?('sink')      # false
+
+# Write a method consecutive_collapse that accepts an array of numbers as an argument. The method should return a new array that results from continuously removing consecutive numbers that are adjacent in the array. If multiple adjacent pairs are consecutive numbers, remove the leftmost pair first.
+
+def consecutive_collapse(arr1)
+  while arr1 != collapse(arr1)
+    arr1 = collapse(arr1)
+  end
+  arr1
+end
+
+def collapse(arr)
+  i = 0
+  while i < arr.length - 1
+    if arr[i] + 1 == arr[i + 1] || arr[i] == arr[i + 1] + 1
+      return arr[0...i] + arr[i + 2..-1]
+    end
+    i += 1
+  end
+  arr
+end
+
+# p consecutive_collapse([3, 4, 1])                     # [1]
+# p consecutive_collapse([1, 4, 3, 7])                  # [1, 7]
+# p consecutive_collapse([9, 8, 2])                     # [2]
+# p consecutive_collapse([9, 8, 4, 5, 6])               # [6]
+# p consecutive_collapse([1, 9, 8, 6, 4, 5, 7, 9, 2])   # [1, 9, 2]
+# p consecutive_collapse([3, 5, 6, 2, 1])               # [1]
+# p consecutive_collapse([5, 7, 9, 9])                  # [5, 7, 9, 9]
+# p consecutive_collapse([13, 11, 12, 12])              # []
+
+# Write a method pretentious_primes that takes accepts an array and a number, n, as arguments. The method should return a new array where each element of the original array is replaced according to the following rules:
+
+# when the number argument is positive, replace an element with the n-th nearest prime number that is greater than the element
+# when the number argument is negative, replace an element with the n-th nearest prime number that is less than the element
+
+def pretentious_primes(arr, num)
+  arr.map { |ele| nearest(ele, num) }
+end
+
+def nearest(element, num)
+  arr1 = []
+  i = element
+  if num > 0
+    while arr1.length < num
+      arr1 << i + 1 if prime?(i + 1)
+      i += 1
+    end
+    return arr1[-1]
+  else
+    num = -num
+    while arr1.length < num
+      arr1 << i - 1 if prime?(i - 1)
+      i -= 1
+      if i < 2
+        return nil
+      end
+    end
+    return arr1[-1]
+  end
+end
+
+p pretentious_primes([4, 15, 7], 1)           # [5, 17, 11]
+p pretentious_primes([4, 15, 7], 2)           # [7, 19, 13]
+p pretentious_primes([12, 11, 14, 15, 7], 1)  # [13, 13, 17, 17, 11]
+p pretentious_primes([12, 11, 14, 15, 7], 3)  # [19, 19, 23, 23, 17]
+p pretentious_primes([4, 15, 7], -1)          # [3, 13, 5]
+p pretentious_primes([4, 15, 7], -2)          # [2, 11, 3]
+p pretentious_primes([2, 11, 21], -1)         # [nil, 7, 19]
+p pretentious_primes([32, 5, 11], -3)         # [23, nil, 3]
+p pretentious_primes([32, 5, 11], -4)         # [19, nil, 2]
+p pretentious_primes([32, 5, 11], -5)         # [17, nil, nil]
